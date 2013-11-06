@@ -1,0 +1,35 @@
+resource PCproblem()
+   var n : int
+   var buff : int
+   var p : int := 0, c : int := 0
+
+   	#MAIN
+	writes("Enter a positiv integer:"); read(n)
+   
+   process Producer
+	writes("Hej\n")
+       var a[1:n] : int
+       fa i := 1 to n ->
+           read(a[i])
+       af
+       do p < n ->
+            # synchronize - wait if buffer full
+			if p = c ->
+				buff := a[++p]
+			fi
+       od
+    end
+
+    process Consumer
+        var b[1:n] : int
+        do c < n ->
+             # synchronize - wait if buffer empty
+			 if p > c ->
+				b[++c] := buff
+			 fi
+         od
+         fa i := 1 to n ->
+             write(b[i])
+         af
+    end
+end PCproblem
